@@ -3,96 +3,103 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 #define HOUR 3600
 #define MAX_EMPLOYEES 5000
+#define MAX_NAME_SIZE 20
 
-typedef struct employee_data
+typedef struct
 {
-    char employee_num[4];
-    char last_name[20];
-    char first_name[20];
-    char middle_name[20];
-    unsigned int hourly_rate;
+    bool occupied_status;
+    unsigned int employee_num;
+    char last_name[MAX_NAME_SIZE];
+    char first_name[MAX_NAME_SIZE];
+    char middle_name[MAX_NAME_SIZE];
+    float hourly_rate;
     int accrued_hours;
-    int current_payout;
-};
+    float current_payout;
+}
+employee_data;
 
-int home_page(int choice, int err_chk);
-int calculate_salary(int employee_id, int hours_rendered, int bonus);
-void new_employee();
-void existing_employee();
+employee_data newcorp[MAX_EMPLOYEES];
+
+int home(void);
+int first_page(int choice, int err_chk);
 
 int main(void)
 {
-    unsigned int option_selected;
-    printf("\nWelcome to Allen's Employee Databasing Program :)\n\nSelect an option:\n1. New Employee\n2. Get Existing Employee Data\n3. Calculate Employee Salary\n");
-    scanf("%d", &option_selected);
-    int next_step = home_page(option_selected, 0);
-    return 0;
+    FILE *fname;
+    fname = fopen("database.txt", "w+");
 
-    FILE *fptr;
-    fptr = fopen("database.csv", "w+");
-
-    if (fptr == NULL)
+    if (fname == NULL)
     {
         printf("ERROR.\n");
-		exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
     else
     {
-        fread();
+        //populate the database with an array of candidates
+        for (int i = 0; i < MAX_EMPLOYEES; i++)
+        {
+            newcorp[i].occupied_status = false;
+            newcorp[i].employee_num = i;
+            newcorp[i].hourly_rate = 0;
+            newcorp[i].accrued_hours = 0;
+            newcorp[i].current_payout = 0;
+        }
+    }
+    
+    while(exit)
+    {
+        home();
     }
 }
 
-int home_page(int choice, int err_chk)
+int home(void)
+{
+    int option_selected;
+
+    //printf("\nWelcome to Allen's Employee Databasing Project :)\n\nSelect an option:\n1. New Employee\n2. Get Existing Employee Data\n3. Calculate Employee Salary\n4. Exit\n");
+    printf("                 /           /\n                /' .,,,,  ./\n               /';'     ,/\n              / /   ,,//,`'`\n             ( ,, '_,  ,,,' ``\n             |    /@  ,,, ;' `\n            /    .   ,''/' `,``\n           /   .     ./, `,, ` ;\n        ,./  .   ,-,',` ,,/''|,'\n       |   /; ./,,'`,,'' |   |\n       |     /   ','    /    |\n        |___/'   '     |     |\n          `,,'  |      /     `\nElvarg's       /      |        ~\n HR Database  '       (\n  Program    :\n            ; .         |--\nBy Allen  :   |         ;\n\n");
+    printf("Choice: ");
+
+    scanf("%d", &option_selected);
+    getchar();
+
+    int status_chk = first_page(option_selected, 0);
+
+    return status_chk;
+}
+
+int first_page(int choice, int err_chk)
 {
     if (err_chk == 0)
     {
         if (choice == 1)
         {
-            //new_employee();
             printf("test success choice made is: %d", choice);
-            return 0;
         }
         else if (choice == 2)
         {
             //existing_employee();
             printf("test success choice made is: %d", choice);
-            return 0;
         }
         else if (choice == 3)
         {
             //calculate_salary();
             printf("test success choice made is: %d", choice);
-            return 0;
+        }
+        else if (choice == 4)
+        {
+            exit(EXIT_SUCCESS);
         }
         else
         {
-            printf("Invalid entry. Please choose again: ");
-            home_page(choice, 1);
+            printf("\nInvalid entry. Please choose again.\n");
+            system("pause");
         }
     }
-    else if (err_chk != 0)
-    {
-        scanf("%d", &choice);
-        home_page(choice, 0);
-    }
     return 0;
-}
-
-void new_employee()
-{
-    int x = 0;
-
-    for (int i = 0; i < MAX_EMPLOYEES; i++)
-    {
-
-    }
-
-    printf("Last Name: ");
-    scanf("%s", &employee_data[x].employee_name);
-    printf("First Name: ");
-    printf("Middle Name: ");
-    printf("Hourly Rate: ");
 }
