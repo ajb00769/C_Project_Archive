@@ -75,6 +75,7 @@ void foutput(char *input)
 		fprintf(fPtr, "%s", input);
 		fclose(fPtr);
 		printf("Password generated successfully. Open newpass.txt to see your randomly generated password.\n");
+		system("notepad.exe newpass.txt");
 
 		return;
 }
